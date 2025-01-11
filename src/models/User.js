@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     role: {
       type: String,
       default: "member",
@@ -23,5 +28,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+console.log(userSchema);
 const User = mongoose.model("User", userSchema);
+
 export default User;
