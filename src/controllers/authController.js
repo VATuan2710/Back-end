@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config({});
 
 export const register = async (req, res) => {
   /**
@@ -55,7 +58,7 @@ export const register = async (req, res) => {
   }
 };
 
-const secretKey = "123";
+const { SECRET_KEY } = process.env;
 
 export const login = async (req, res) => {
   /**
@@ -68,37 +71,42 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
+    const userExist = await User.findOne({ email });
+    if (!userExist) {
       return res.status(404).json({ message: "Người dùng không tồn tại!" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, userExist.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Mật khẩu không chính xác!" });
     }
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      secretKey,
-      { expiresIn: "60s" } 
+      { userId: userExist._id, role: userExist.role },
+      SECRET_KEY,
+      {
+        expiresIn: "10d",
+      }
     );
-
+    userExist.password = undefined; // khi gửi dữ liệu json thì undefined, null,.. thì sẽ k được gửi
     return res.status(200).json({
       message: "Đăng nhập thành công!",
       token,
-      user: {
-        id: user._id,
-        email: user.email,
-        username: user.username,
-        role: user.role,
-      },
+      // user: {
+      //   id: userExist._id,
+      //   email: userExist.email,
+      //   username: userExist.username,
+      //   role: userExist.role,
+      // },
+      user: userExist,
     });
   } catch (err) {
     console.error("Lỗi khi đăng nhập:", err);
     res.status(500).json({ message: "Lỗi server!" });
   }
 };
+
+export const refreshToken = async (req, res) => {};
 
 export const getUserInfo = async (req, res) => {
   try {

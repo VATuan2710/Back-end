@@ -1,6 +1,6 @@
 import Category from "../models/Category.js";
 
-export const create = async (req, res) => {
+export const create = async (req, res, next) => {
   try {
     const category = await Category.create(req.body);
 
@@ -21,7 +21,11 @@ export const create = async (req, res) => {
   }
 };
 
-export const getAll = async (req, res) => {
+// export const create = async (req, res, next) => {
+//   const category = await Category.create(req.body);
+// };
+
+export const getAll = async (req, res, next) => {
   try {
     const categories = await Category.find();
     if (!categories || categories.length === 0) {
@@ -41,7 +45,7 @@ export const getAll = async (req, res) => {
   }
 };
 
-export const getById = async (req, res) => {
+export const getById = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
 
@@ -62,7 +66,17 @@ export const getById = async (req, res) => {
   }
 };
 
-export const updateById = async (req, res) => {
+// export const getById = async (req, res, next) => {
+//   const category = await Category.findById(req.params.id);
+
+//   if (!category) {
+//     return next(new Error("Category not found"));
+//   }
+
+//   return res.status(200).json(category);
+// };
+
+export const updateById = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -74,7 +88,7 @@ export const updateById = async (req, res) => {
         message: "Không tìm thấy sản phẩm để cập nhật!",
       });
     }
-    
+
     return res.status(200).send({
       message: "Cập nhật sản phẩm thành công!",
       data: category,
@@ -87,7 +101,7 @@ export const updateById = async (req, res) => {
   }
 };
 
-export const softRemoveById = async (req, res) => {
+export const softRemoveById = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndUpdate(
       req.params.id,
@@ -116,7 +130,7 @@ export const softRemoveById = async (req, res) => {
   }
 };
 
-export const removeById = async (req, res) => {
+export const removeById = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
 

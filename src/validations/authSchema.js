@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  email: z.string().min(1, { message: "cần nhập email" }),
+  email: z
+    .string()
+    .min(1, { message: "cần nhập email" })
+    .email({ message: "cần đúng định dạng email" }),
   password: z
     .string()
     .min(1, { message: "cần nhập password" })
@@ -11,7 +14,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().min(1, { message: "cần nhập email" }),
+  email: z.string().min(1, { message: "cần nhập email" }).email(),
   password: z
     .string()
     .min(1, { message: "cần nhập password" })

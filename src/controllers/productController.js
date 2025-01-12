@@ -1,10 +1,13 @@
 import Product from "../models/Product.js";
 import Category from "../models/Category.js";
+import mongoose, { Error } from "mongoose";
 
-export const getAll = async (req, res) => {
+export const getAll = async (req, res, next) => {
   try {
-    const products = await Product.find().populate("categoryId", "title");
-
+    const products = await Product.find({
+      isHidden: false,
+      deletedAt: null,
+    }).populate("categoryId", "title");
     if (!products || products.length === 0) {
       return res.status(404).send({
         message: "Không tìm thấy sản phẩm nào!",
@@ -22,7 +25,7 @@ export const getAll = async (req, res) => {
   }
 };
 
-export const getById = async (req, res) => {
+export const getById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).populate(
       "categoryId",
@@ -47,14 +50,27 @@ export const getById = async (req, res) => {
   }
 };
 
-export const create = async (req, res) => {
+export const create = async (req, res, next) => {
   try {
     const { categoryId, ...rest } = req.body;
+
+    if (!categoryId || !mongoose.Types.ObjectId.isValid(categoryId)) {
+      categoryId = "67836a60a83094583683c85e";
+    } else {
+      const category = await Category.findById(categoryId);
+      if (!category) {
+        return next(new Error("Category not found"));
+      }
+    }
     const product = await Product.create({
       ...rest,
       categoryId,
     });
 
+    await Category.updateOne(
+      { _id: categoryId },
+      { $push: { products: product._id } }
+    );
     return res.status(201).send({
       message: "Tạo sản phẩm thành công!",
       data: product,
@@ -67,7 +83,7 @@ export const create = async (req, res) => {
   }
 };
 
-export const updateById = async (req, res) => {
+export const updateById = async (req, res, next) => {
   try {
     const { categoryId, ...rest } = req.body;
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -109,7 +125,7 @@ export const updateById = async (req, res) => {
   }
 };
 
-export const softDeleteById = async (req, res) => {
+export const softDeleteById = async (req, res, next) => {
   try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
@@ -138,7 +154,7 @@ export const softDeleteById = async (req, res) => {
   }
 };
 
-export const removeById = async (req, res) => {
+export const removeById = async (req, res, next) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 

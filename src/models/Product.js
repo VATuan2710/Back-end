@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import slugMiddleware from "../middlewares/slugMiddlewares.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -15,9 +16,9 @@ const productSchema = new mongoose.Schema(
       default: "Updating",
     },
     categoryId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      // default: "67836a60a83094583683c85e", // unclassified
     },
     isHidden: {
       type: Boolean,
@@ -31,6 +32,7 @@ const productSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
+productSchema.plugin(slugMiddleware("title", "slug"));
 const Product = mongoose.model("Product", productSchema);
 
 export default Product;

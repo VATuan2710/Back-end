@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import slugMiddleware from "../middlewares/slugMiddlewares.js";
 
 const categorySchema = new mongoose.Schema(
   {
@@ -24,10 +25,8 @@ const categorySchema = new mongoose.Schema(
     },
     products: [
       {
-        productId: {
-          type: Schema.Types.ObjectId,
-          ref: "Product",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
       },
     ],
   },
@@ -36,6 +35,8 @@ const categorySchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+
+categorySchema.plugin(slugMiddleware("title", "slug"));
 
 const Category = mongoose.model("Category", categorySchema);
 

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { getUserInfo, login, register } from "../controllers/authController.js";
 import { validBodyRequest } from "../middlewares/validBodyRequest.js";
 import { loginSchema, registerSchema } from "../validations/authSchema.js";
-import { authenticateToken } from "../middlewares/handleJWT.js";
+import { authenticateToken } from "../middlewares/verifyUser.js";
 
 const authRoutes = Router();
 
