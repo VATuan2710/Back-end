@@ -48,7 +48,6 @@ export const register = async (req, res) => {
         id: savedUser._id,
         email: savedUser.email,
         username: savedUser.username,
-        password: savedUser.password,
         role: savedUser.role,
       },
     });
@@ -85,20 +84,20 @@ export const login = async (req, res) => {
       { userId: userExist._id, role: userExist.role },
       SECRET_KEY,
       {
-        expiresIn: "10d",
+        expiresIn: "20s",
       }
     );
     userExist.password = undefined; // khi gửi dữ liệu json thì undefined, null,.. thì sẽ k được gửi
     return res.status(200).json({
       message: "Đăng nhập thành công!",
       token,
-      // user: {
-      //   id: userExist._id,
-      //   email: userExist.email,
-      //   username: userExist.username,
-      //   role: userExist.role,
-      // },
-      user: userExist,
+      user: {
+        id: userExist._id,
+        email: userExist.email,
+        username: userExist.username,
+        role: userExist.role,
+      },
+      // user: userExist,
     });
   } catch (err) {
     console.error("Lỗi khi đăng nhập:", err);

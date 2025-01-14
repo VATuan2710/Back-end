@@ -5,16 +5,16 @@ export const create = async (req, res, next) => {
     const category = await Category.create(req.body);
 
     if (!category) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không thể tạo sản phẩm!",
       });
     }
-    return res.status(201).send({
+    return res.status(201).json({
       message: "Tạo sản phẩm thành công!",
       data: category,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi tạo sản phẩm!",
       error: error.message,
     });
@@ -29,16 +29,16 @@ export const getAll = async (req, res, next) => {
   try {
     const categories = await Category.find();
     if (!categories || categories.length === 0) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không tìm thấy sản phẩm nào!",
       });
     }
-    return res.status(200).send({
+    return res.status(200).json({
       message: "Lấy danh sách sản phẩm thành công!",
       data: categories,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm!",
       error: error.message,
     });
@@ -50,16 +50,16 @@ export const getById = async (req, res, next) => {
     const category = await Category.findById(req.params.id);
 
     if (!category) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không tìm thấy sản phẩm!",
       });
     }
-    return res.status(200).send({
+    return res.status(200).json({
       message: "Lấy chi tiết sản phẩm thành công!",
       data: category,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi lấy chi tiết sản phẩm!",
       error: error.message,
     });
@@ -84,17 +84,17 @@ export const updateById = async (req, res, next) => {
     });
 
     if (!category) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không tìm thấy sản phẩm để cập nhật!",
       });
     }
 
-    return res.status(200).send({
+    return res.status(200).json({
       message: "Cập nhật sản phẩm thành công!",
       data: category,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi cập nhật sản phẩm!",
       error: error.message,
     });
@@ -113,17 +113,17 @@ export const softRemoveById = async (req, res, next) => {
     );
 
     if (!category) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không tìm thấy danh mục để xóa mềm!",
       });
     }
 
-    return res.status(200).send({
+    return res.status(200).json({
       message: "Xóa mềm danh mục thành công!",
       data: category,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi xóa mềm danh mục!",
       error: error.message,
     });
@@ -135,17 +135,17 @@ export const removeById = async (req, res, next) => {
     const category = await Category.findByIdAndDelete(req.params.id);
 
     if (!category) {
-      return res.status(404).send({
+      return res.status(404).json({
         message: "Không tìm thấy sản phẩm để xóa!",
       });
     }
 
-    return res.status(200).send({
+    return res.status(200).json({
       message: "Xóa sản phẩm thành công!",
       data: category,
     });
   } catch (error) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Đã xảy ra lỗi khi xóa sản phẩm!",
       error: error.message,
     });
