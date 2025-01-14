@@ -84,7 +84,7 @@ export const login = async (req, res) => {
       { userId: userExist._id, role: userExist.role },
       SECRET_KEY,
       {
-        expiresIn: "20s",
+        expiresIn: "10d",
       }
     );
     userExist.password = undefined; // khi gửi dữ liệu json thì undefined, null,.. thì sẽ k được gửi
